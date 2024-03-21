@@ -1,82 +1,63 @@
+// To do:
+// - make better purple and red?
+// - make main loop of the program
+// - make the program export a presentation
+// - make sure everything is good, clean and documented well 
+
 #include "functions.jsx"; 
 
-// Program prosi użytkownika o wprowadzenie odpowiednich danych
-var title = prompt ("Podaj tytuł prezentacji: ", "tytul");
-var author = prompt ("Podaj autora prezentacji: ", "autor");
-var subtitle = prompt ("Podaj podtytuł prezentacji: ", "podtytul")
+// Ask user for presentation length until correct value is given
+var presentationLength = prompt ("Enter the presentation legth: (3-26)", "6", "Presentation length");
+var correctPresentationLength = ["3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"];
+while (!correctPresentationLength.includes(presentationLength)) {
+    presentationLength = prompt("You have entered a wrong length of the presentation. Please enter a correct value: (3-26)","6", "Presentation length")
+}
 
+// Ask user for a single main color for the presentation's theme, out of 5 possible options
+var colorAccent = prompt ("Enter the accent color for the presentation: (1-5) \n [1:Deep Sky Blue | 2:Pumpkin Orange | 3:Twitch Purple | 4:Lemon Green  | 5:Candy Apple Red ] \n Enter own value: 0", "1", "Color Accent");
+var colorAccentOptions = ["0","1","2","3","4","5"];
+while (!colorAccentOptions.includes(colorAccent)) {
+    colorAccent = prompt("You have entered a wrong option. Please enter a correct value: (1-5)\n [1:Deep Sky Blue | 2:Pumpkin Orange | 3:Twitch Purple | 4:Lemon Green  | 5:Candy Apple Red ] \n Enter own value: 0","1", "Color Accent")
+}
 
-// Wylosowanie liczby do funkcjonalności losowania tła i dodanie jej to tabeli
-var random = Math.round(Math.random() * (26 - 1) + 1);
+// Assign correct hexadecimal value to the variable
+if (colorAccent == "0") {
+    colorAccentValue = prompt("Enter your own HEX code for the color accent: (!Don't forget to delete the hashtag, otherwise the program won't work)", "fafa33", "Custom color accent");
+}
+else if (colorAccent == "1") {
+    colorAccentValue = "00bfff";
+}
+else if (colorAccent == "2") {
+    colorAccentValue = "ff7518";
+}
+else if (colorAccent == "3") {
+    colorAccentValue = "9146ff";
+}
+else if (colorAccent == "4") {
+    colorAccentValue = "32cd32";
+}
+else if (colorAccent == "5") {
+    colorAccentValue = "ff0800";
+}
+else {
+    alert("Somehow an error occured while trying to get a color accent value. You can feel proud of yourself now bozo.","おめでとう")
+}
+
+// Create and export the first slide of the presentation
 var used = [];
-used.push(random);
+openRandomBG();
+var title = prompt ("Enter the title of the presentation: ", "Title", "Title");
+var author = prompt ("Enter the author of the presentation: ", "Author", "Author");
+var subtitle = prompt ("Enter a subtitle for the first slide: ", "Subtitle", "Subtitle")
+createFirstOrLastSlideText(title, author, subtitle);
+exportAsPNG("slide1");
 
-// Otworzenie losowego zdjęcia z naszych teł
-var fileRef = new File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/backgrounds/bg" + random + ".png");
-app.open( fileRef );  
+// Create all of the main slides
 
-
-// Wygenerowanie półprzeźroczystego tła na środku 
-activeDocument.artLayers.add();
-var Colour = new SolidColor;
-Colour.rgb.hexValue = '000000';
-activeDocument.selection.select([[278, 231], [1641, 231], [1641, 850], [278, 850]], SelectionType.REPLACE, 0, false);
-activeDocument.selection.fill (Colour, ColorBlendMode.NORMAL, 60, false);
-activeDocument.selection.deselect();
-
-
-// Dodanie tytułu
-var myDoc = app.activeDocument;
-var myLayerText = myDoc.artLayers.add();
-myLayerText.kind = LayerKind.TEXT;
-var myText = myLayerText.textItem;
-
-myColor = new SolidColor;
-myColor.rgb.red = 255;
-myColor.rgb.green = 255;
-myColor.rgb.blue = 255;
-
-myText.font = "LEMONMILK-Medium";
-myText.contents = title;
-myText.position = [962, 460]; 
-myText.color = myColor;
-myText.size = 78;
-myText.justification = Justification.CENTER;
-
-
-// Dodanie podtytułu
-var myLayerText = myDoc.artLayers.add();
-myLayerText.kind = LayerKind.TEXT;
-var myText = myLayerText.textItem;
-
-myColor.rgb.red = 39;
-myColor.rgb.green = 145;
-myColor.rgb.blue = 232;
-
-myText.font = "LEMONMILK-Regular";
-myText.contents = author;
-myText.position = [962, 564]; 
-myText.color = myColor;
-myText.size = 86;
-myText.justification = Justification.CENTER;
-
-
-// Dodanie drugiego podtytułu
-var myLayerText = myDoc.artLayers.add();
-myLayerText.kind = LayerKind.TEXT;
-var myText = myLayerText.textItem;
-
-myColor.rgb.red = 255;
-myColor.rgb.green = 255;
-myColor.rgb.blue = 255;
-
-myText.font = "LEMONMILK-Regular";
-myText.contents = subtitle;
-myText.position = [962, 680]; 
-myText.color = myColor;
-myText.size = 92;
-myText.justification = Justification.CENTER;
-
-exportAsPNG("lubieplacki");
-
-
+// Create and export the last slide of the presentation
+openRandomBG();
+var main = prompt ("Enter the main text of the last slide: ", "Main text", "Main text");
+var secondary = prompt ("Enter the secondary text of the last slide: ", "Secondary text", "Secondary text");
+var additional = prompt ("Enter an additional text for the last slide: ", "Additional text", "Additional text")
+createFirstOrLastSlideText(main, secondary, additional);
+exportAsPNG("slide100");
