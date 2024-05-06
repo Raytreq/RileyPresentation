@@ -1,8 +1,11 @@
 // To do:
-// - make better purple and red?
-// - make main loop of the program
-// - make the program export a presentation
+// - make better colors(less saturated)
+// - make the program export a full PDF
 // - make sure everything is good, clean and documented well 
+// - polish middle text slide
+// - add 3 image-type slides
+// - make banger readme
+// - make function for text cration and maybe something more
 
 #include "functions.jsx"; 
 
@@ -14,10 +17,10 @@ while (!correctPresentationLength.includes(presentationLength)) {
 }
 
 // Ask user for a single main color for the presentation's theme, out of 5 possible options
-var colorAccent = prompt ("Enter the accent color for the presentation: (1-5) \n [1:Deep Sky Blue | 2:Pumpkin Orange | 3:Twitch Purple | 4:Lemon Green  | 5:Candy Apple Red ] \n Enter own value: 0", "1", "Color Accent");
+var colorAccent = prompt ("Enter the accent color for the presentation: (1-5) \n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red ] \n Enter own value: 0", "1", "Color accent");
 var colorAccentOptions = ["0","1","2","3","4","5"];
 while (!colorAccentOptions.includes(colorAccent)) {
-    colorAccent = prompt("You have entered a wrong option. Please enter a correct value: (1-5)\n [1:Deep Sky Blue | 2:Pumpkin Orange | 3:Twitch Purple | 4:Lemon Green  | 5:Candy Apple Red ] \n Enter own value: 0","1", "Color Accent")
+    colorAccent = prompt("You have entered a wrong value. Please enter a correct value: (1-5)\n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red ] \n Enter own value: 0","1", "Color accent")
 }
 
 // Assign correct hexadecimal value to the variable
@@ -43,21 +46,97 @@ else {
     alert("Somehow an error occured while trying to get a color accent value. You can feel proud of yourself now bozo.","おめでとう")
 }
 
-// Create and export the first slide of the presentation
+// Define the table that stores used backgrounds
 var used = [];
-openRandomBG();
+
+// Define the color of the text background for all slides (Default=Black)
+var ColourOfBG = new SolidColor;
+ColourOfBG.rgb.hexValue = "000000";
+
+
+// Create and export the first slide of the presentation
+openRandomBG()
 var title = prompt ("Enter the title of the presentation: ", "Title", "Title");
 var author = prompt ("Enter the author of the presentation: ", "Author", "Author");
 var subtitle = prompt ("Enter a subtitle for the first slide: ", "Subtitle", "Subtitle")
-createFirstOrLastSlideText(title, author, subtitle);
+firstOrLastSlideText(title, author, subtitle);
 exportAsPNG("slide1");
 
-// Create all of the main slides
+// Create and export all of the main slides
+var possibleSlideTypes = ["1","2","3","4","5"]
+for (var i = 2; i < presentationLength; i++) {
+    var slideType = prompt("Enter the type of the slide: (1-5) \n [1:Text BG aligned to the left | 2:Text BG aligned to the right | 3:Horizontally centered text BG| 4:Vertically centered text BG | 5:Text BG covering the whole slide]", "1", "Slide type");
+    while (!possibleSlideTypes.includes(slideType)) {
+        slideType = prompt("You have entered a wrong value. Please enter a correct value: (1-5)\n [1:Text BG aligned to the left | 2:Text BG aligned to the right | 3:Horizontally centered text BG| 4:Vertically centered text BG | 5:Text BG covering the whole slide]","1", "Slide type")
+    }
+    openRandomBG();
+
+    if (slideType == "1") {
+        var title = prompt ("Enter the title of the slide: ", "Title", "Title");
+        var subtitle = prompt ("Enter the subtitle of the slide: ", "Subtitle", "Subtitle");
+        var content = prompt ("Enter the content of the slide: ", "Content", "Content");
+        leftText(title, subtitle, content);
+    }
+    else if (slideType == "2") {
+        var title = prompt ("Enter the title of the slide: ", "Title", "Title");
+        var subtitle = prompt ("Enter the subtitle of the slide: ", "Subtitle", "Subtitle");
+        var content = prompt ("Enter the content of the slide: ", "Content", "Content");
+        rightText(title, subtitle, content);
+    }
+    else if (slideType == "3") {
+        var possibleOptions = ["1", "2"]
+        var option = prompt ("You have chosen a slide type that allows both text and images.\n Enter the subtype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one medium image]", "1", "Slide subtype");
+        while (!possibleOptions.includes(option)) {
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one medium image]", "1", "Slide subtype")
+        }
+
+        if (option == "1") {
+            var title = prompt ("Enter the title of the slide: ", "Title", "Title");
+            var subtitle = prompt ("Enter the subtitle of the slide: ", "Subtitle", "Subtitle");
+            var content = prompt ("Enter the content of the slide: ", "Content", "Content");
+            horizontallyCenteredText(title, subtitle, content);
+        }
+
+        else if (option == "2") {
+
+        }
+    }
+    else if (slideType == "4") {
+        var possibleOptions = ["1", "2"]
+        var option = prompt ("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and three small images]", "1", "Slide subtype");
+        while (!possibleOptions.includes(option)) {
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and three small images]", "1", "Slide subtype")
+        }
+
+        var title = prompt ("Enter the title of the slide: ", "Title", "Title");
+        var subtitle = prompt ("Enter the subtitle of the slide: ", "Subtitle", "Subtitle");
+        var content = prompt ("Enter the content of the slide: ", "Content", "Content");
+        verticallyCenteredText(title, subtitle, content);
+    }
+    else if (slideType == "5") {
+        var possibleOptions = ["1", "2"]
+        var option = prompt ("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one large image]", "1", "Slide subtype");
+        while (!possibleOptions.includes(option)) {
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one large image]", "1", "Slide subtype")
+        }
+
+        var title = prompt ("Enter the title of the slide: ", "Title", "Title");
+        var subtitle = prompt ("Enter the subtitle of the slide: ", "Subtitle", "Subtitle");
+        var content = prompt ("Enter the content of the slide: ", "Content", "Content");
+        wholeText(title, subtitle, content);
+    }
+
+    exportAsPNG("slide"+i);
+}
 
 // Create and export the last slide of the presentation
 openRandomBG();
 var main = prompt ("Enter the main text of the last slide: ", "Main text", "Main text");
 var secondary = prompt ("Enter the secondary text of the last slide: ", "Secondary text", "Secondary text");
 var additional = prompt ("Enter an additional text for the last slide: ", "Additional text", "Additional text")
-createFirstOrLastSlideText(main, secondary, additional);
-exportAsPNG("slide100");
+firstOrLastSlideText(main, secondary, additional);
+
+exportAsPNG("slide"+i);
+
+
+// Create a PDF
