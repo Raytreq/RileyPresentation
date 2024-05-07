@@ -8,9 +8,27 @@ function exportAsPNG(fileName) {
     png.includeProfile = false;
     png.format = SaveDocumentType.PNG; 
 
-    savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slides/"+fileName+".png");
+    savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPNG/"+fileName+".png");
     app.activeDocument.exportDocument(savePath, ExportType.SAVEFORWEB, png);
 };
+
+function saveAsPSD(fileName) {
+    // Check if there is an active document
+    if (app.documents.length > 0) {
+        var myDoc = app.activeDocument;
+
+        var psdOptions = new PhotoshopSaveOptions();
+        psdOptions.embedColorProfile = true;
+        psdOptions.alphaChannels = true;
+        psdOptions.layers = true;
+
+        // Get the file path to save
+        var savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPSD/"+fileName+".psd");;
+
+        // Save the document as PSD
+        myDoc.saveAs(savePath, psdOptions, true);
+    }
+}
 
 // Create a semi-transparent background on the left of the document for text
 function leftBG() {
@@ -266,21 +284,18 @@ function horizontallyCenteredText(mainText, secondaryText, slideContent) {
     myText.height = 700;
 }
 
-// Function to prompt user to select an image file
+// Prompt user to select an image file
 function selectImageFile() {
     var file = File.openDialog("Select an image file", "*.jpg;*.png;*.gif");
     return file;
 }
 
-// Function to resize image
+// Resize image
 function resizeImage(image, rightWidth, rightHeight) {
     var width = image.width;
     var height = image.height;
-
-    // Calculate aspect ratio
     var aspectRatio = width / height;
 
-    // Resize based on the larger dimension
         if (width != rightWidth) {
             width = rightWidth;
             height = Math.round(width / aspectRatio);
@@ -290,20 +305,15 @@ function resizeImage(image, rightWidth, rightHeight) {
             width = Math.round(height * aspectRatio);
         }
 
-    // Resize image
     image.resizeImage(width, height);
-    
 }
 
-// Main function to add image to existing document
+// Add image to existing document
 function addImageToDocument() {
-    // Select active document
-    var doc = app.activeDocument;
-    // Prompt user to select an image file
+    var myDoc = app.activeDocument;
     var imageFile = selectImageFile();
     
     if (imageFile) {
-        // Open the selected image
         var imageDoc = open(imageFile);
         if (imageVariant == "1") {
             resizeImage(imageDoc, 608, 760);
@@ -312,30 +322,24 @@ function addImageToDocument() {
             resizeImage(imageDoc, 400, 400);
         }
         else if (imageVariant == "3") {
-            resizeImage(imageDoc, 1280, 720);
+            resizeImage(imageDoc, 1296, 729);
         }
 
-        // Copy image to clipboard
         imageDoc.selection.selectAll();
         imageDoc.selection.copy();
-        // Close the selected image without saving changes
         imageDoc.close(SaveOptions.DONOTSAVECHANGES);
-        // Paste image into active document
-        doc.paste();
+        myDoc.paste();
 
-        // Deselect any selection
-        doc.selection.deselect();
+        myDoc.selection.deselect();
     } else {
         alert("No image file selected.");
     }
 }
 
-
 // Create image with text for horizontally centered slide
 function horizontallyCenteredImage(mainText, secondaryText) {
     horizontallyCenteredBG();
     var myDoc = app.activeDocument;
-
     addImageToDocument();
 
     var myLayerText = myDoc.artLayers.add();
@@ -408,34 +412,92 @@ function verticallyCenteredText(mainText, secondaryText, slideContent) {
     myText.height = 500;
 }
 
-// Create image with text for vertically centered slide
-function verticallyCenteredImage(mainText, secondaryText) {
+// Create images with text for vertically centered slide
+function verticallyCenteredImage(mainText, firstImageText, secondImageText, thirdImageText) {
     verticallyCenteredBG();
     var myDoc = app.activeDocument;
 
     addImageToDocument();
+    addImageToDocument();
+    addImageToDocument();
+
+    var layerName = "Layer 3"; 
+    var targetLayer = myDoc.layers.getByName(layerName);
+    
+    if (targetLayer) {
+        var newX = 1298; 
+        var newY = 340; 
+        targetLayer.translate(newX - targetLayer.bounds[0], newY - targetLayer.bounds[1]);
+    } else {
+        alert("Layer not found: " + layerName);
+    }
+
+    layerName = "Layer 4"; 
+    targetLayer = myDoc.layers.getByName(layerName);
+    
+    if (targetLayer) {
+        var newX = 760; 
+        var newY = 340; 
+        targetLayer.translate(newX - targetLayer.bounds[0], newY - targetLayer.bounds[1]);
+    } else {
+        alert("Layer not found: " + layerName);
+    }
+
+
+    layerName = "Layer 5"; 
+    targetLayer = myDoc.layers.getByName(layerName);
+    
+    if (targetLayer) {
+        var newX = 222; 
+        var newY = 340; 
+        targetLayer.translate(newX - targetLayer.bounds[0], newY - targetLayer.bounds[1]);
+    } else {
+        alert("Layer not found: " + layerName);
+    }
 
     var myLayerText = myDoc.artLayers.add();
     myLayerText.kind = LayerKind.TEXT;
     var myText = myLayerText.textItem;
     myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
+    myColor.rgb.hexValue = colorAccentValue;
     myText.font = "LEMONMILK-Medium";
     myText.contents = mainText;
-    myText.position = [962, 130]; 
+    myText.position = [961, 295]; 
     myText.color = myColor;
-    myText.size = 72;
+    myText.size = 74;
     myText.justification = Justification.CENTER;
 
     var myLayerText = myDoc.artLayers.add();
     myLayerText.kind = LayerKind.TEXT;
     var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
+    myColor.rgb.hexValue = "ffffff";
     myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [958, 1025]; 
+    myText.contents = firstImageText;
+    myText.position = [420, 829]; 
     myText.color = myColor;
-    myText.size = 84;
+    myText.size = 50;
+    myText.justification = Justification.CENTER;
+
+    var myLayerText = myDoc.artLayers.add();
+    myLayerText.kind = LayerKind.TEXT;
+    var myText = myLayerText.textItem;
+    myColor.rgb.hexValue = "ffffff";
+    myText.font = "LEMONMILK-Regular";
+    myText.contents = secondImageText;
+    myText.position = [960, 829]; 
+    myText.color = myColor;
+    myText.size = 50;
+    myText.justification = Justification.CENTER;
+
+    var myLayerText = myDoc.artLayers.add();
+    myLayerText.kind = LayerKind.TEXT;
+    var myText = myLayerText.textItem;
+    myColor.rgb.hexValue = "ffffff";
+    myText.font = "LEMONMILK-Regular";
+    myText.contents = thirdImageText;
+    myText.position = [1499, 829]; 
+    myText.color = myColor;
+    myText.size = 50;
     myText.justification = Justification.CENTER;
 }
 
@@ -486,12 +548,9 @@ function wholeText(mainText, secondaryText, slideContent) {
 }
 
 // Create image with text for entirely covered slide
-function wholeImage(mainText, firstImageText, secondImageText, thirdImageText) {
+function wholeImage(mainText, secondaryText) {
     wholeBG();
     var myDoc = app.activeDocument;
-
-    addImageToDocument();
-    addImageToDocument();
     addImageToDocument();
 
     var myLayerText = myDoc.artLayers.add();
@@ -501,7 +560,7 @@ function wholeImage(mainText, firstImageText, secondImageText, thirdImageText) {
     myColor.rgb.hexValue = "ffffff";
     myText.font = "LEMONMILK-Medium";
     myText.contents = mainText;
-    myText.position = [962, 130]; 
+    myText.position = [962, 125]; 
     myText.color = myColor;
     myText.size = 72;
     myText.justification = Justification.CENTER;
@@ -509,36 +568,55 @@ function wholeImage(mainText, firstImageText, secondImageText, thirdImageText) {
     var myLayerText = myDoc.artLayers.add();
     myLayerText.kind = LayerKind.TEXT;
     var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
+    myColor.rgb.hexValue = colorAccentValue;
     myText.font = "LEMONMILK-Regular";
-    myText.contents = firstImageText;
-    myText.position = [958, 1025]; 
+    myText.contents = secondaryText;
+    myText.position = [962, 1026]; 
     myText.color = myColor;
     myText.size = 84;
     myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondImageText;
-    myText.position = [958, 1025]; 
-    myText.color = myColor;
-    myText.size = 84;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = thirdImageText;
-    myText.position = [958, 1025]; 
-    myText.color = myColor;
-    myText.size = 84;
-    myText.justification = Justification.CENTER;
-
 }
 
+// Create a PDF
+    function automatePDF(i) {
+    // Define file paths
+    var filePaths = [];
+    for (var n = 1; n <= i; n++) {
+        filePaths.push("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPNG/slide" + n +".png");
+    }
 
+    var presentationName = prompt("How would you like the presentation file to be named?", "Presentation name", "Presentation name")
+    // Define output PDF path
+    var outputPath = "C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/"+ presentationName +".pdf";
+
+    // Ensure files exist before creating PDF presentation
+    var missingFiles = [];
+    for (var i = 0; i < filePaths.length; i++) {
+        var file = new File(filePaths[i]);
+        if (!file.exists) {
+            missingFiles.push(filePaths[i]);
+        }
+    }
+
+    if (missingFiles.length > 0) {
+        alert("The following slides do not exist:\n\n" + missingFiles.join("\n"));
+    } else {
+        // Define PDF presentation settings
+        var presentationOptions = new PresentationOptions();
+        presentationOptions.presentation = true;
+        presentationOptions.mode = OpenDocumentMode.RGB;
+        presentationOptions.includeLayers = false;
+        presentationOptions.matte = MatteType.NONE;
+        presentationOptions.bitsPerChannel = BitsPerChannelType.EIGHT;
+        presentationOptions.transparency = true;
+
+    // Convert file paths to File objects
+    var files = [];
+    for (var j = 0; j < filePaths.length; j++) {
+        files.push(new File(filePaths[j]));
+    }
+
+    // Create PDF presentation
+    app.makePDFPresentation(files, new File(outputPath), presentationOptions);
+    }
+}
