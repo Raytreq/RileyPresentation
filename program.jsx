@@ -1,23 +1,17 @@
-// To do:
-// - make sure everything is good, clean and documented well 
-// - make banger readme
-// - make function for text creation and maybe something more
-// - make all images have a small border?
-
 #include "functions.jsx"; 
 
 // Ask user for presentation length until correct value is given
 var presentationLength = prompt ("Enter the presentation legth: (3-26)", "6", "Presentation length");
 var correctPresentationLength = ["3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"];
 while (!correctPresentationLength.includes(presentationLength)) {
-    presentationLength = prompt("You have entered a wrong length of the presentation. Please enter a correct value: (3-26)","6", "Presentation length")
+    presentationLength = prompt("You have entered a wrong length of the presentation. Please enter a correct value: (3-26)","6", "Presentation length");
 }
 
 // Ask user for a single main color for the presentation's theme, out of 5 possible options
-var colorAccent = prompt ("Enter the accent color for the presentation: (1-5) \n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red ] \n Enter own value: 0", "1", "Color accent");
+var colorAccent = prompt ("Enter the accent color for the presentation: (1-5) \n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red] \n Enter own value: 0", "1", "Color accent");
 var colorAccentOptions = ["0","1","2","3","4","5"];
 while (!colorAccentOptions.includes(colorAccent)) {
-    colorAccent = prompt("You have entered a wrong value. Please enter a correct value: (1-5)\n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red ] \n Enter own value: 0","1", "Color accent")
+    colorAccent = prompt("You have entered a wrong value. Please enter a correct value: (1-5)\n [1:Blue | 2:Orange | 3:Purple | 4:Green  | 5:Red] \n Enter own value: 0","1", "Color accent");
 }
 
 // Assign correct hexadecimal value to the variable
@@ -89,7 +83,7 @@ for (var i = 2; i < presentationLength; i++) {
 
         var option = prompt("You have chosen a slide type that allows both text and images.\n Enter the subtype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one medium image]", "1", "Slide subtype");
         while (!possibleOptions.includes(option)) {
-            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one medium image]", "1", "Slide subtype")
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text | 2:Fill the slide with text and one medium image]", "1", "Slide subtype")
         }
     
         if (option == "1") {
@@ -110,9 +104,9 @@ for (var i = 2; i < presentationLength; i++) {
 
     else if (slideType == "4") {
     
-        var option = prompt("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and three small images]", "1", "Slide subtype");
+        var option = prompt("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text | 2:Fill the slide with text and three small images]", "1", "Slide subtype");
         while (!possibleOptions.includes(option)) {
-            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and three small images]", "1", "Slide subtype")
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text | 2:Fill the slide with text and three small images]", "1", "Slide subtype")
         }
     
         if (option == "1") {
@@ -135,9 +129,9 @@ for (var i = 2; i < presentationLength; i++) {
 
     else if (slideType == "5") {
         var possibleOptions = ["1", "2"]
-        var option = prompt ("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one large image]", "1", "Slide subtype");
+        var option = prompt ("You have chosen a slide type that allows both text and images.\n Enter the subtypetype of the slide: (1-2) \n [1:Fill the slide with text | 2:Fill the slide with text and one large image]", "1", "Slide subtype");
         while (!possibleOptions.includes(option)) {
-            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text| 2:Fill the slide with text and one large image]", "1", "Slide subtype")
+            option = prompt("You have entered a wrong value. Please enter a correct value: (1-2) \n [1:Fill the slide with text | 2:Fill the slide with text and one large image]", "1", "Slide subtype")
         }
     
         if (option == "1") {

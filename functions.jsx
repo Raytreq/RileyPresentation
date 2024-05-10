@@ -1,4 +1,13 @@
-// Export a file as a PNG without saving it, to call it just insert how would you like the file to be named
+// Define missing "includes" function (later useful for array operations)
+Array.prototype.includes = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) { return true; }
+    }
+    return false;
+}
+
+// Export a file as a PNG
 function exportAsPNG(fileName) {
     var png = new ExportOptionsSaveForWeb();
     png.PNG8 = false;
@@ -10,24 +19,27 @@ function exportAsPNG(fileName) {
 
     savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPNG/"+fileName+".png");
     app.activeDocument.exportDocument(savePath, ExportType.SAVEFORWEB, png);
-};
+}
 
+// Save a document as a PSD
 function saveAsPSD(fileName) {
-    // Check if there is an active document
     if (app.documents.length > 0) {
-        var myDoc = app.activeDocument;
-
         var psdOptions = new PhotoshopSaveOptions();
         psdOptions.embedColorProfile = true;
         psdOptions.alphaChannels = true;
         psdOptions.layers = true;
 
-        // Get the file path to save
-        var savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPSD/"+fileName+".psd");;
-
-        // Save the document as PSD
-        myDoc.saveAs(savePath, psdOptions, true);
+        var savePath = File("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPSD/"+fileName+".psd");
+        app.activeDocument.saveAs(savePath, psdOptions, true);
     }
+}
+
+// Create a semi-transparent background in the middle of document for text
+function middleBG() {
+    activeDocument.artLayers.add();
+    activeDocument.selection.select([[278, 231], [1641, 231], [1641, 850], [278, 850]], SelectionType.REPLACE, 0, false);
+    activeDocument.selection.fill (ColourOfBG, ColorBlendMode.NORMAL, 58, false);
+    activeDocument.selection.deselect();
 }
 
 // Create a semi-transparent background on the left of the document for text
@@ -46,56 +58,33 @@ function rightBG() {
     activeDocument.selection.deselect();
 }
 
-// Create a semi-transparent background in the middle of the document for text
+// Create a horizontally centered semi-transparent background for text or images
 function horizontallyCenteredBG() {
     activeDocument.artLayers.add();
-    var ColourOfBG = new SolidColor;
-    ColourOfBG.rgb.hexValue = "000000";
     activeDocument.selection.select([[320, 0], [1600, 0], [1600, 1080], [320, 1080]], SelectionType.REPLACE, 0, false);
     activeDocument.selection.fill (ColourOfBG, ColorBlendMode.NORMAL, 58, false);
     activeDocument.selection.deselect();
 }
 
-// Create a semi-transparent background in the middle of the document for text
+// Create a vertically centered semi-transparent background for text or images
 function verticallyCenteredBG() {
     activeDocument.artLayers.add();
-    var ColourOfBG = new SolidColor;
-    ColourOfBG.rgb.hexValue = "000000";
     activeDocument.selection.select([[0, 176], [1920, 176], [1920, 904], [0, 904]], SelectionType.REPLACE, 0, false);
     activeDocument.selection.fill (ColourOfBG, ColorBlendMode.NORMAL, 58, false);
     activeDocument.selection.deselect();
 }
 
-// Create a semi-transparent background on the enitre document for text
+// Create a semi-transparent background on the entire document for text or images
 function wholeBG() {
     activeDocument.artLayers.add();
-    var ColourOfBG = new SolidColor;
-    ColourOfBG.rgb.hexValue = "000000";
     activeDocument.selection.select([[0, 0], [1920, 0], [1920, 1080], [0, 1080]], SelectionType.REPLACE, 0, false);
     activeDocument.selection.fill (ColourOfBG, ColorBlendMode.NORMAL, 58, false);
     activeDocument.selection.deselect();
 }
 
-// Create a semi-transparent background in the middle of document for text
-function middleBG() {
-    activeDocument.artLayers.add();
-    activeDocument.selection.select([[278, 231], [1641, 231], [1641, 850], [278, 850]], SelectionType.REPLACE, 0, false);
-    activeDocument.selection.fill (ColourOfBG, ColorBlendMode.NORMAL, 58, false);
-    activeDocument.selection.deselect();
-}
-
-
-// Define missing "includes" function
-Array.prototype.includes = function(obj) {
-    var i = this.length;
-    while (i--) {
-        if (this[i] === obj) { return true; }
-    }
-    return false;
-}
-
-// Open random background that has not been already used 
+// Open a random background that has not been already used 
 function openRandomBG() {
+    // The first number means the amount of the backgrounds
     var random = Math.round(Math.random() * (26 - 1) + 1);
     while (used.includes(random)) {
         var random = Math.round(Math.random() * (26 - 1) + 1);
@@ -106,180 +95,71 @@ function openRandomBG() {
     app.open( fileRef );  
 }
 
-// Create text on the middle of the slide, best for first or last slide, to call it just insert three types of text
+// Create text one the semi-transparent background
+function createText(color, font, contents, position, size, textType, justification) {
+    var myDoc = app.activeDocument;
+    var myLayerText = myDoc.artLayers.add();
+    myColor = new SolidColor;
+
+    myLayerText.kind = LayerKind.TEXT;
+    var myText = myLayerText.textItem;
+    myColor.rgb.hexValue = color;
+    myText.font = font;
+    myText.contents = contents;
+    myText.position = position; 
+    myText.color = myColor;
+    myText.size = size;
+    myText.kind = textType;
+    myText.justification = justification;
+}
+
+// Create a middle-type slide
 function firstOrLastSlideText(mainText, secondaryText, additionalText) {
     middleBG();
 
-    var myDoc = app.activeDocument;
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [962, 460]; 
-    myText.color = myColor;
-    myText.size = 78;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [962, 564]; 
-    myText.color = myColor;
-    myText.size = 86;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = additionalText;
-    myText.position = [962, 680]; 
-    myText.color = myColor;
-    myText.size = 92;
-    myText.justification = Justification.CENTER;
+    createText("ffffff", "LEMONMILK-Medium", mainText, [962, 460], 80, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [962, 564], 88, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Regular", additionalText, [962, 680], 94, TextType.POINTTEXT, Justification.CENTER);
 }
 
-// Create text for left-side slide
+// Create a left-sided slide
 function leftText(mainText, secondaryText, slideContent) {
     leftBG();
-    var myDoc = app.activeDocument;
-    myDoc.autoKerning = AutoKernType.METRICS;
-    myDoc.useAutoLeading = true;
+    app.activeDocument.autoKerning = AutoKernType.METRICS;
+    app.activeDocument.useAutoLeading = true;
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [36, 286]; 
-    myText.color = myColor;
-    myText.size = 62;
-    myText.justification = Justification.LEFT;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [36, 370]; 
-    myText.color = myColor;
-    myText.size = 70;
-    myText.justification = Justification.LEFT;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Light";
-    myText.contents = slideContent;
-    myText.position = [36, 440]; 
-    myText.color = myColor;
-    myText.size = 45;
-    myText.justification = Justification.LEFT;
-    myText.kind = TextType.PARAGRAPHTEXT;
-
+    createText("ffffff", "LEMONMILK-Medium", mainText, [36, 286], 62, TextType.POINTTEXT, Justification.LEFT);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [36, 370], 70, TextType.POINTTEXT, Justification.LEFT);
+    createText("ffffff", "LEMONMILK-Light", slideContent, [36, 440], 45, TextType.PARAGRAPHTEXT, Justification.LEFT);
+    var myText = app.activeDocument.activeLayer.textItem;
     myText.width = 1150;
     myText.height = 700;
 }
 
-// Create text for right-side slide
+// Create a right-sided slide
 function rightText(mainText, secondaryText, slideContent) {
     rightBG();
-    var myDoc = app.activeDocument;
-    myDoc.autoKerning = AutoKernType.METRICS;
-    myDoc.useAutoLeading = true;
+    app.activeDocument.autoKerning = AutoKernType.METRICS;
+    app.activeDocument.useAutoLeading = true;
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [1880, 286]; 
-    myText.color = myColor;
-    myText.size = 62;
-    myText.justification = Justification.RIGHT;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [1880, 370]; 
-    myText.color = myColor;
-    myText.size = 70;
-    myText.justification = Justification.RIGHT;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Light";
-    myText.contents = slideContent;
-    myText.position = [730, 440]; 
-    myText.color = myColor;
-    myText.size = 45;
-    myText.kind = TextType.PARAGRAPHTEXT;
-    myText.justification = Justification.RIGHT;
-
+    createText("ffffff", "LEMONMILK-Medium", mainText, [1880, 286], 62, TextType.POINTTEXT, Justification.RIGHT);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [1880, 370], 70, TextType.POINTTEXT, Justification.RIGHT);
+    createText("ffffff", "LEMONMILK-Light", slideContent, [730, 440], 45, TextType.PARAGRAPHTEXT, Justification.RIGHT);
+    var myText = app.activeDocument.activeLayer.textItem;
     myText.width = 1150;
     myText.height = 700;
 }
 
-// Create text for horizontally centered slide
+// Create a horizontally centered slide with text
 function horizontallyCenteredText(mainText, secondaryText, slideContent) {
     horizontallyCenteredBG();
-    var myDoc = app.activeDocument;
-    myDoc.autoKerning = AutoKernType.METRICS;
-    myDoc.useAutoLeading = true;
+    app.activeDocument.autoKerning = AutoKernType.METRICS;
+    app.activeDocument.useAutoLeading = true;
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [961, 286]; 
-    myText.color = myColor;
-    myText.size = 62;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [961, 370]; 
-    myText.color = myColor;
-    myText.size = 70;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Light";
-    myText.contents = slideContent;
-    myText.position = [385, 440]; 
-    myText.color = myColor;
-    myText.size = 45;
-    myText.kind = TextType.PARAGRAPHTEXT;
-    myText.justification = Justification.CENTER;
-
+    createText("ffffff", "LEMONMILK-Medium", mainText, [961, 286], 62, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [961, 370], 70, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Light", slideContent, [385, 440], 45, TextType.PARAGRAPHTEXT, Justification.CENTER);
+    var myText = app.activeDocument.activeLayer.textItem;
     myText.width = 1150;
     myText.height = 700;
 }
@@ -290,7 +170,7 @@ function selectImageFile() {
     return file;
 }
 
-// Resize image
+// Resize an image
 function resizeImage(image, rightWidth, rightHeight) {
     var width = image.width;
     var height = image.height;
@@ -308,7 +188,7 @@ function resizeImage(image, rightWidth, rightHeight) {
     image.resizeImage(width, height);
 }
 
-// Add image to existing document
+// Add an image to an existing document
 function addImageToDocument() {
     var myDoc = app.activeDocument;
     var imageFile = selectImageFile();
@@ -329,90 +209,36 @@ function addImageToDocument() {
         imageDoc.selection.copy();
         imageDoc.close(SaveOptions.DONOTSAVECHANGES);
         myDoc.paste();
-
         myDoc.selection.deselect();
     } else {
         alert("No image file selected.");
     }
 }
 
-// Create image with text for horizontally centered slide
+// Create a horizontally centered slide with an image
 function horizontallyCenteredImage(mainText, secondaryText) {
     horizontallyCenteredBG();
-    var myDoc = app.activeDocument;
     addImageToDocument();
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [962, 130]; 
-    myText.color = myColor;
-    myText.size = 72;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [958, 1025]; 
-    myText.color = myColor;
-    myText.size = 84;
-    myText.justification = Justification.CENTER;
+    createText("ffffff", "LEMONMILK-Medium", mainText, [962, 130], 72, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [958, 1025], 84, TextType.POINTTEXT, Justification.CENTER);
 }
 
-// Create text for vertically centered slide
+// Create a vertically centered slide with text
 function verticallyCenteredText(mainText, secondaryText, slideContent) {
     verticallyCenteredBG();
-    var myDoc = app.activeDocument;
-    myDoc.autoKerning = AutoKernType.METRICS;
-    myDoc.useAutoLeading = true;
+    app.activeDocument.autoKerning = AutoKernType.METRICS;
+    app.activeDocument.useAutoLeading = true;
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [961, 376]; 
-    myText.color = myColor;
-    myText.size = 62;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [961, 460]; 
-    myText.color = myColor;
-    myText.size = 70;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Light";
-    myText.contents = slideContent;
-    myText.position = [110, 530]; 
-    myText.color = myColor;
-    myText.size = 45;
-    myText.kind = TextType.PARAGRAPHTEXT;
-    myText.justification = Justification.CENTER;
-
-    myText.width = 1700;
-    myText.height = 500;
+    createText("ffffff", "LEMONMILK-Medium", mainText, [961, 326], 62, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [961, 410], 70, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Light", slideContent, [385, 480], 45, TextType.PARAGRAPHTEXT, Justification.CENTER);
+    var myText = app.activeDocument.activeLayer.textItem;
+    myText.width = 1150;
+    myText.height = 700;
 }
 
-// Create images with text for vertically centered slide
+// Create a vertically centered slide with images
 function verticallyCenteredImage(mainText, firstImageText, secondImageText, thirdImageText) {
     verticallyCenteredBG();
     var myDoc = app.activeDocument;
@@ -455,141 +281,44 @@ function verticallyCenteredImage(mainText, firstImageText, secondImageText, thir
         alert("Layer not found: " + layerName);
     }
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [961, 295]; 
-    myText.color = myColor;
-    myText.size = 74;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = firstImageText;
-    myText.position = [420, 829]; 
-    myText.color = myColor;
-    myText.size = 50;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondImageText;
-    myText.position = [960, 829]; 
-    myText.color = myColor;
-    myText.size = 50;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = thirdImageText;
-    myText.position = [1499, 829]; 
-    myText.color = myColor;
-    myText.size = 50;
-    myText.justification = Justification.CENTER;
+    createText(colorAccentValue, "LEMONMILK-Medium", mainText, [961, 295], 76, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Regular", firstImageText, [420, 829], 50, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Regular", secondImageText, [960, 829], 50, TextType.POINTTEXT, Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Regular", thirdImageText, [1499, 829], 50, TextType.POINTTEXT, Justification.CENTER);
 }
 
-// Create text for entirely covered slide   
+// Create an entirely covered slide with text
 function wholeText(mainText, secondaryText, slideContent) {
     wholeBG();
-    var myDoc = app.activeDocument;
-    myDoc.autoKerning = AutoKernType.METRICS;
-    myDoc.useAutoLeading = true;
+    app.activeDocument.autoKerning = AutoKernType.METRICS;
+    app.activeDocument.useAutoLeading = true;
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [961, 276]; 
-    myText.color = myColor;
-    myText.size = 62;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [961, 360]; 
-    myText.color = myColor;
-    myText.size = 70;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Light";
-    myText.contents = slideContent;
-    myText.position = [110, 430]; 
-    myText.color = myColor;
-    myText.size = 45;
-    myText.kind = TextType.PARAGRAPHTEXT;
-    myText.justification = Justification.CENTER;
-
-    myText.width = 1700;
-    myText.height = 500;
+    createText("ffffff", "LEMONMILK-Medium", mainText, [961, 276], 62, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [961, 360], 70, TextType.POINTTEXT,Justification.CENTER);
+    createText("ffffff", "LEMONMILK-Light", slideContent, [160, 430], 45, TextType.PARAGRAPHTEXT, Justification.CENTER);
+    var myText = app.activeDocument.activeLayer.textItem;
+    myText.width = 1600;
+    myText.height = 700;
 }
 
-// Create image with text for entirely covered slide
+// Create an entirely covered slide with an image
 function wholeImage(mainText, secondaryText) {
     wholeBG();
-    var myDoc = app.activeDocument;
     addImageToDocument();
 
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor = new SolidColor;
-    myColor.rgb.hexValue = "ffffff";
-    myText.font = "LEMONMILK-Medium";
-    myText.contents = mainText;
-    myText.position = [962, 125]; 
-    myText.color = myColor;
-    myText.size = 72;
-    myText.justification = Justification.CENTER;
-
-    var myLayerText = myDoc.artLayers.add();
-    myLayerText.kind = LayerKind.TEXT;
-    var myText = myLayerText.textItem;
-    myColor.rgb.hexValue = colorAccentValue;
-    myText.font = "LEMONMILK-Regular";
-    myText.contents = secondaryText;
-    myText.position = [962, 1026]; 
-    myText.color = myColor;
-    myText.size = 84;
-    myText.justification = Justification.CENTER;
+    createText("ffffff", "LEMONMILK-Medium", mainText, [962, 125], 72, TextType.POINTTEXT, Justification.CENTER);
+    createText(colorAccentValue, "LEMONMILK-Regular", secondaryText, [962, 1026], 84, TextType.POINTTEXT, Justification.CENTER);
 }
 
-// Create a PDF
-    function automatePDF(i) {
-    // Define file paths
+// Create a PDF presentation
+function automatePDF(i) {
     var filePaths = [];
     for (var n = 1; n <= i; n++) {
         filePaths.push("C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/slidesPNG/slide" + n +".png");
     }
-
-    var presentationName = prompt("How would you like the presentation file to be named?", "Presentation name", "Presentation name")
-    // Define output PDF path
+    var presentationName = prompt("How would you like the presentation file to be named?", "presentationName", "Presentation name");
     var outputPath = "C:/Users/New Hope/Desktop/Projekty/RileyPresentation/result/"+ presentationName +".pdf";
 
-    // Ensure files exist before creating PDF presentation
     var missingFiles = [];
     for (var i = 0; i < filePaths.length; i++) {
         var file = new File(filePaths[i]);
@@ -601,7 +330,6 @@ function wholeImage(mainText, secondaryText) {
     if (missingFiles.length > 0) {
         alert("The following slides do not exist:\n\n" + missingFiles.join("\n"));
     } else {
-        // Define PDF presentation settings
         var presentationOptions = new PresentationOptions();
         presentationOptions.presentation = true;
         presentationOptions.mode = OpenDocumentMode.RGB;
@@ -610,13 +338,11 @@ function wholeImage(mainText, secondaryText) {
         presentationOptions.bitsPerChannel = BitsPerChannelType.EIGHT;
         presentationOptions.transparency = true;
 
-    // Convert file paths to File objects
     var files = [];
     for (var j = 0; j < filePaths.length; j++) {
         files.push(new File(filePaths[j]));
     }
 
-    // Create PDF presentation
     app.makePDFPresentation(files, new File(outputPath), presentationOptions);
     }
 }
