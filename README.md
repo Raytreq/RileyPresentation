@@ -155,11 +155,6 @@ This will change the hue of the colored text on all slides.
 # Notes
 * Don't worry about *#include "functions.jsx";* being underlined in VSC, it's probably an IntelliSense bug, not the actual program
 * This program is best for Adobe Photoshop 2021 version. Anything before or after that should also work, but when I tried it out on Photoshop CC 2018 text function didn't make actually visible text (I didn't look too much into it though)
-* CPU
-* Motherboard
-* RAM memory
-* GPU
-* PSU        
 
 
 ## If you come across any errors or bugs please let me know        
