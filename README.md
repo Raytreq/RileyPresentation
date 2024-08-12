@@ -29,7 +29,7 @@ RileyPresentation is a JSX script made for automating the proccess of creating a
    git clone https://github.com/Raytreq/RileyPresentation
    ```
 
-### 3. Find 5 paths showed below. Open *"functions.jsx"* and replace them with your own folder locations:
+### 3. Find 5 paths shown below. Open *"functions.jsx"* and replace them with your own folder locations:
 * Path for exporting each slide as a PNG *("YOURFOLDERLOCATION/RileyPresentation/result/slidesPNG/"+fileName+".png")*
 
   ![image](https://github.com/Raytreq/RileyPresentation/assets/136091294/6d5ca3ac-6d42-47e7-8a00-aca7cd6652cc)
